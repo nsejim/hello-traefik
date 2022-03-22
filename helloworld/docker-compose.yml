@@ -1,0 +1,13 @@
+version: '3'
+services:
+  whoami:
+    image: traefik/whoami
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.whoami.rule=Host(`localhost`) && PathPrefix(`/whoami`)
+    networks:
+      - whoaminet
+
+networks:
+  whoaminet:
+    driver: bridge

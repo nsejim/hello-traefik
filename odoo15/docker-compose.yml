@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+  db:
+    image: postgres:14
+    user: root
+    expose: 
+      - 5432
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - POSTGRES_DB=postgres
+    restart: always             # run as a service
+    volumes:
+        - ./postgresql:/var/lib/postgresql/data
+    networks:
+      - odoo15net
+
+  web:
+    image: odoo:15
+    user: root
+    platform: linux/amd64
+    expose:
+      - 8069 
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.odoo15.rule=Host(`odoo15.localhost`)
+      - traefik.http.services.odoo15.loadbalancer.server.port=8069
+    depends_on:
+      - db
+    tty: true
+    volumes:
+      - ./addons:/mnt/extra-addons
+      - ./custom-addons/v15:/mnt/custom-addons
+      - ./etc:/etc/odoo
+    restart: always             # run as a service
+    networks:
+      - odoo15net
+
+networks:
+  odoo15net:
+    driver: bridge

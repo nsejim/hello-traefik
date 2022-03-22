@@ -1,0 +1,7 @@
+/addons*
+/postgresql*
+/logs
+/etc/addons
+/etc/sessions
+/etc/odoo-server.log
+/etc/filestore
